@@ -2,6 +2,7 @@
   "name": "proshop_mern",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "repository": "git@github.com:dmtaijul9/proshop_mern.git",
   "author": "Taijul Islam <taijulislam.st9@gmail.com>",
   "license": "MIT",
