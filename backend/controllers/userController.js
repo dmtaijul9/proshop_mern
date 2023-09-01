@@ -118,4 +118,18 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, getUserProfile, registerUser, updateUserProfile };
+//@desc ---- Get all users
+//@route ---  PUT /api/users
+//@access --- Privet/Admin
+const getAllUsers = asyncHandler(async (req, res) => {
+  const users = await User.find().select("-password");
+  res.json(users);
+});
+
+export {
+  authUser,
+  getUserProfile,
+  registerUser,
+  updateUserProfile,
+  getAllUsers,
+};

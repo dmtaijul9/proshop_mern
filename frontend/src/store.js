@@ -8,13 +8,16 @@ import {
 import { cartReducer } from "./reducers/cartReducers";
 import {
   userDetailsReducer,
+  userListReducer,
   userLoginReducer,
   userRegisterReducer,
   userUpdateProfileReducer,
 } from "./reducers/userReducers";
 import {
+  myOrdersReducers,
   orderCreateReducer,
   orderDetailsReducer,
+  orderPayReducer,
 } from "./reducers/orderReducers";
 
 // Root Reducer
@@ -28,6 +31,9 @@ const reducer = combineReducers({
   userUpdateProfile: userUpdateProfileReducer,
   orderCreate: orderCreateReducer,
   orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
+  myOrders: myOrdersReducers,
+  userList: userListReducer,
 });
 
 // Generating initial state from local Storage

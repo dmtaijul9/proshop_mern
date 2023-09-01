@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
-import { Form, Button, Row, Col } from "react-bootstrap";
+import { Form, Button, Row, Col, Table } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import { getMyOrdersList } from "../actions/orderActions";
 
 const ProfileScreen = ({ history }) => {
   const [email, setEmail] = useState("");
@@ -15,6 +17,9 @@ const ProfileScreen = ({ history }) => {
   const dispatch = useDispatch();
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, user, error } = userDetails;
+
+  const myOrders = useSelector((state) => state.myOrders);
+  const { orders, loading: loadingOrders, error: errorOrders } = myOrders;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -28,6 +33,7 @@ const ProfileScreen = ({ history }) => {
     } else {
       if (!user.name) {
         dispatch(getUserDetails("profile"));
+        dispatch(getMyOrdersList());
       } else {
         setName(user.name);
         setEmail(user.email);
@@ -36,7 +42,7 @@ const ProfileScreen = ({ history }) => {
   }, [userInfo, history, dispatch, user]);
 
   const submitHandler = (e) => {
-    e.preventDefault();
+    e.preventhefault();
 
     if (password !== confirmPassword) {
       return setMessage("Password do not match");
@@ -99,6 +105,55 @@ const ProfileScreen = ({ history }) => {
       </Col>
       <Col md={9}>
         <h2>My Orders</h2>
+        {loadingOrders ? (
+          <Loader />
+        ) : errorOrders ? (
+          <Message variant="danger">{errorOrders}</Message>
+        ) : (
+          <Table striped bordered hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>DATE</th>
+                <th>TOTAL</th>
+                <th>PAID</th>
+                <th>DELIVERED</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order._id}</td>
+                  <td>{order.createdAt.substring(0, 10)}</td>
+                  <td>${order.totalPrice}</td>
+                  <td>
+                    {order.isPaid ? (
+                      order.paidAt.substring(0, 10)
+                    ) : (
+                      <i className="fas fa-times" style={{ color: "red " }}></i>
+                    )}
+                  </td>
+                  <td>
+                    {order.isDeliverd ? (
+                      order.deliveredAt.substring(0, 10)
+                    ) : (
+                      <i className="fas fa-times" style={{ color: "red " }}></i>
+                    )}
+                  </td>
+                  <td>
+                    {" "}
+                    <LinkContainer to={`/order/${order._id}`}>
+                      <Button variant="light" className="btn-sm">
+                        Details
+                      </Button>
+                    </LinkContainer>{" "}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
       </Col>
     </Row>
   );
